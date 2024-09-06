@@ -12,10 +12,11 @@ export interface MediaProps {
 
 const App: React.FC = () => {
   const [playlist, setPlaylist] = useState<MediaProps[]>([]);
-  const [autoPlay, setAutoPlay] = useState<boolean>(false);
+  const [autoPlay, setAutoPlay] = useState<boolean>(true);
   const [currentMediaIndex, setCurrentMediaIndex] = useState<number>(0);
 
   const playNextMedia = () => {
+    if (!autoPlay) return;
     setCurrentMediaIndex((prevIndex) =>
       prevIndex < playlist.length - 1 ? prevIndex + 1 : 0,
     );
