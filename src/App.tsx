@@ -12,6 +12,7 @@ export interface MediaProps {
 
 const App: React.FC = () => {
   const [playlist, setPlaylist] = useState<MediaProps[]>([]);
+  const [autoPlay, setAutoPlay] = useState<boolean>(false);
   const [currentMediaIndex, setCurrentMediaIndex] = useState<number>(0);
 
   useEffect(() => {
@@ -68,7 +69,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="media-container relative" id="media">
+    <div className="container relative" id="media">
       {!playlist.length && (
         <>
           <div className="no-media-container">
@@ -84,10 +85,11 @@ const App: React.FC = () => {
       {playlist.length > 0 && (
         <div>
           <MediaPlayer
-            onEnded={playNextMedia}
-            autoPlay={currentMediaIndex === 0}
-            media={playlist[currentMediaIndex]}
+            autoPlay={autoPlay}
             playlist={playlist}
+            onEnded={playNextMedia}
+            setAutoPlay={setAutoPlay}
+            media={playlist[currentMediaIndex]}
             currentMediaIndex={currentMediaIndex}
             setCurrentMediaIndex={setCurrentMediaIndex}
           />

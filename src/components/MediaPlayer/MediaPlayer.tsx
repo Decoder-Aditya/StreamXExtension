@@ -2,16 +2,17 @@ import React, { useEffect, useRef } from "react";
 import Controller from "../Controller";
 import { MediaProps } from "@/App";
 
-interface MediaPlayerProps {
+export interface MediaPlayerProps {
   media: {
     mediaName: string;
     mediaUrl: string;
     mediaType: string;
   };
-  onEnded: () => void;
   autoPlay: boolean;
+  onEnded: () => void;
   playlist: MediaProps[];
   currentMediaIndex: number;
+  setAutoPlay: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentMediaIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
@@ -20,9 +21,11 @@ const MediaPlayer: React.FC<MediaPlayerProps> = ({
   onEnded,
   autoPlay,
   playlist,
+  setAutoPlay,
   currentMediaIndex,
   setCurrentMediaIndex,
 }) => {
+  console.log(autoPlay);
   const { mediaUrl, mediaType } = media;
   const mediaRef = useRef<HTMLMediaElement>(null);
 
@@ -35,8 +38,11 @@ const MediaPlayer: React.FC<MediaPlayerProps> = ({
   return (
     <div className="h-screen w-screen flex items-center justify-center media-container paused">
       <Controller
+        media={media}
         mediaRef={mediaRef}
+        autoPlay={autoPlay}
         playlist={playlist}
+        setAutoPlay={setAutoPlay}
         currentMediaIndex={currentMediaIndex}
         setCurrentMediaIndex={setCurrentMediaIndex}
       />
