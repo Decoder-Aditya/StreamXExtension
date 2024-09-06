@@ -1,9 +1,10 @@
 import Playlist from "@/Playlist";
-import TogglePlay from "./TogglePlay";
-import ControlButtons from "./ControlButtons/ControlButtons";
+import TogglePlay from "./ControlButtons/TogglePlay";
 import MediaController from "./MediaController/MediaController";
 import { MediaProps } from "@/App";
-import ToggleFullScreen from "./ToggleFullScreen";
+import ToggleFullScreen from "./ControlButtons/ToggleFullScreen";
+import PlayNext from "./ControlButtons/PlayNext";
+import PlayPrev from "./ControlButtons/PlayPrev";
 
 interface ControllerProps {
   mediaRef: React.RefObject<HTMLMediaElement>;
@@ -27,14 +28,23 @@ const Controller = ({
         />
         <span>{playlist[currentMediaIndex].mediaName}</span>
       </div>
-      <ControlButtons>
-        <div>
+      <div className="absolute bottom-0 left-0 right-0 px-8 mb-4 flex justify-between">
+        <div className="flex gap-2">
+          <PlayPrev
+            currentMediaIndex={currentMediaIndex}
+            setCurrentMediaIndex={setCurrentMediaIndex}
+          />
           <TogglePlay mediaRef={mediaRef} />
+          <PlayNext
+            playlist={playlist}
+            currentMediaIndex={currentMediaIndex}
+            setCurrentMediaIndex={setCurrentMediaIndex}
+          />
         </div>
         <div>
           <ToggleFullScreen />
         </div>
-      </ControlButtons>
+      </div>
     </MediaController>
   );
 };
