@@ -21,9 +21,13 @@ const Playlist: React.FC<PlaylistProps> = ({
   currentMediaIndex,
   setCurrentMediaIndex,
 }) => {
+  if (mediaFiles.length === 1) {
+    return null;
+  }
+
   return (
     <Sheet>
-      <SheetTrigger>
+      <SheetTrigger asChild>
         <Button size="icon" variant="ghost" className="hover:bg-transparent">
           <ListVideo width={24} height={24} />
         </Button>

@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import "./App.css";
+import Footer from "./components/Footer";
 import MediaInput from "./components/MediaInput/MediaInput";
 import MediaPlayer from "./components/MediaPlayer/MediaPlayer";
-import Playlist from "./Playlist";
 
 export interface MediaProps {
   mediaName: string;
@@ -30,9 +30,10 @@ const App: React.FC = () => {
       const fileType = file.type.split("/")[0];
       if (fileType === "audio" || fileType === "video") {
         const mediaObjectURL = URL.createObjectURL(file);
+        const name = removeFileType(file.name);
         newMediaList.push({
           mediaType: fileType,
-          mediaName: file.name,
+          mediaName: name,
           mediaUrl: mediaObjectURL,
         });
       } else {
@@ -45,6 +46,14 @@ const App: React.FC = () => {
       setCurrentMediaIndex(0); // Start playing the first media in the playlist
     }
   };
+
+  function removeFileType(fileName: string): string {
+    const lastDotIndex = fileName.lastIndexOf(".");
+    if (lastDotIndex === -1) {
+      return fileName;
+    }
+    return fileName.substring(0, lastDotIndex);
+  }
 
   const playNextMedia = () => {
     setCurrentMediaIndex((prevIndex) =>
@@ -59,15 +68,18 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="media-container relative">
+    <div className="media-container relative" id="media">
       {!playlist.length && (
-        <div className="no-media-container">
-          <h1>Select something to play.</h1>
-          <MediaInput
-            handleMediaChange={handleMediaChange}
-            playlist={playlist}
-          />
-        </div>
+        <>
+          <div className="no-media-container">
+            <h1>Select something to play.</h1>
+            <MediaInput
+              handleMediaChange={handleMediaChange}
+              playlist={playlist}
+            />
+          </div>
+          <Footer />
+        </>
       )}
       {playlist.length > 0 && (
         <div>
@@ -75,15 +87,10 @@ const App: React.FC = () => {
             onEnded={playNextMedia}
             autoPlay={currentMediaIndex === 0}
             media={playlist[currentMediaIndex]}
+            playlist={playlist}
+            currentMediaIndex={currentMediaIndex}
+            setCurrentMediaIndex={setCurrentMediaIndex}
           />
-          <div className="absolute top-0 left-0 px-8 py-4 text-lg flex items-center">
-            <Playlist
-              mediaFiles={playlist}
-              currentMediaIndex={currentMediaIndex}
-              setCurrentMediaIndex={setCurrentMediaIndex}
-            />
-            <span>{playlist[currentMediaIndex].mediaName}</span>
-          </div>
         </div>
       )}
     </div>
