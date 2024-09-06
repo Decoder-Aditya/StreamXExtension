@@ -11,6 +11,8 @@ import PictureInPictureButton from "./ControlButtons/PictureInPictureButton";
 import SettingsButton from "./ControlButtons/SettingsButton";
 import ToggleAutoPlay from "./ControlButtons/ToggleAutoPlay";
 import MediaTimeline from "./ControlButtons/MediaTimeline";
+import { useState } from "react";
+import MediaInput from "./MediaInput/MediaInput";
 
 interface ControllerProps {
   media: {
@@ -23,6 +25,7 @@ interface ControllerProps {
   currentMediaIndex: number;
   mediaRef: React.RefObject<HTMLMediaElement>;
   setAutoPlay: React.Dispatch<React.SetStateAction<boolean>>;
+  setPlaylist: React.Dispatch<React.SetStateAction<MediaProps[]>>;
   setCurrentMediaIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
@@ -32,9 +35,12 @@ const Controller = ({
   playlist,
   autoPlay,
   setAutoPlay,
+  setPlaylist,
   currentMediaIndex,
   setCurrentMediaIndex,
 }: ControllerProps) => {
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+
   return (
     <MediaController>
       <div className="absolute left-0 top-0 flex items-center px-8 py-4 text-lg">
@@ -43,14 +49,16 @@ const Controller = ({
           currentMediaIndex={currentMediaIndex}
           setCurrentMediaIndex={setCurrentMediaIndex}
         />
-        <span>{playlist[currentMediaIndex].mediaName}</span>
+        <span className="px-2 text-xl">
+          {playlist[currentMediaIndex].mediaName}
+        </span>
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 mb-4 flex flex-col gap-2 px-8">
         <MediaTimeline media={media} mediaRef={mediaRef} />
 
         <div className="flex justify-between">
-          <div className="flex">
+          <div className="flex gap-2" onMouseLeave={() => setIsHovered(false)}>
             <PlayPrev
               currentMediaIndex={currentMediaIndex}
               setCurrentMediaIndex={setCurrentMediaIndex}
@@ -61,11 +69,21 @@ const Controller = ({
               currentMediaIndex={currentMediaIndex}
               setCurrentMediaIndex={setCurrentMediaIndex}
             />
-            <Speaker mediaRef={mediaRef} />
+            <Speaker
+              mediaRef={mediaRef}
+              isHovered={isHovered}
+              setIsHovered={setIsHovered}
+            />
             <PlaybackTime mediaRef={mediaRef} />
           </div>
 
-          <div className="flex">
+          <div className="flex gap-2">
+            <MediaInput
+              playlist={playlist}
+              setPlaylist={setPlaylist}
+              currentMediaIndex={currentMediaIndex}
+              setCurrentMediaIndex={setCurrentMediaIndex}
+            />
             {playlist.length > 1 && (
               <ToggleAutoPlay autoPlay={autoPlay} setAutoPlay={setAutoPlay} />
             )}
